@@ -1,14 +1,14 @@
 import{mkdirSync,readdirSync,readFileSync,writeFileSync,existsSync}from'node:fs';
 import{join}from'node:path';
-const T:Record<number,[number,number,number]>={0:[0,0,0],1:[1,0,1],2:[4,0,1],3:[0,1,0],4:[0,1,2],5:[0,2,2],6:[0,2,3],7:[0,3,3],16:[0,2,1],17:[0,2,1],18:[0,2,1],19:[0,2,1],20:[0,2,1],21:[0,2,1],22:[0,2,1],23:[0,1,1],24:[0,2,1],25:[0,2,1],26:[0,2,1],27:[0,1,1],28:[0,2,1],29:[0,2,1],30:[0,2,1],32:[0,2,1],33:[0,2,1],34:[0,2,1],48:[2,0,0],49:[2,1,0],50:[2,1,0],51:[2,0,0],52:[0,0,0],64:[0,1,1],65:[0,2,0],80:[0,1,0],81:[0,1,0],82:[0,0,1],83:[0,1,0]};
+const T=[1,18,66,5,7,11,12,16,0,0,0,0,0,0,0,0,10,10,10,10,10,10,10,6,10,10,10,6,10,10,10,0,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,0,33,37,37,33,1,0,0,0,0,0,0,0,0,0,0,0,6,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,2,5];
 function run(p:Uint8Array,g:Uint8Array):{out:Uint8Array;code:number}{
 const n=p.length,D=new Int32Array(256);let s=0;const C=new Int32Array(64);let c=0;const M=new Int32Array(256),o=new Uint8Array(65536);let l=0,q=0,pc=0,k=0;const E=new TextEncoder(),d=(v:number)=>({out:o.slice(0,l),code:v});
 for(;;){
 if(k===1e6)return d(10);
 if(pc<0||pc>=n)return d(9);
-const op=p[pc],u=T[op];
-if(!u)return d(5);
-const[im,po,pu]=u;
+const op=p[pc],v=T[op];
+if(!v)return d(5);
+const w=v-1,im=w>>4,po=(w>>2)&3,pu=w&3;
 if(pc+im>=n)return d(9);
 k++;
 const nx=pc+1+im;
@@ -24,23 +24,23 @@ case 4:D[s]=D[s-1];s++;break;
 case 5:{const v=D[s-1];D[s-1]=D[s-2];D[s-2]=v;break;}
 case 6:D[s]=D[s-2];s++;break;
 case 7:{const a=D[s-3];D[s-3]=D[s-2];D[s-2]=D[s-1];D[s-1]=a;break;}
-case 23:D[s-1]=-D[s-1]|0;break;
+case 23:D[s-1]=-D[s-1];break;
 case 27:D[s-1]=~D[s-1];break;
 case 16:case 17:case 18:case 19:case 20:case 21:case 22:case 24:case 25:case 26:case 28:case 29:case 30:case 32:case 33:case 34:{
 const b=D[s-1],a=D[s-2];let r:number;
-if(op===16)r=(a+b)|0;
-else if(op===17)r=(a-b)|0;
+if(op===16)r=a+b;
+else if(op===17)r=a-b;
 else if(op===18)r=Math.imul(a,b);
 else if(op===19){if(b===0)return d(4);r=a===-2147483648&&b===-1?a:(a/b)|0;}
-else if(op===20){if(b===0)return d(4);r=b===-1?0:(a%b)|0;}
-else if(op===21){if(b===0)return d(4);r=Math.floor((a>>>0)/(b>>>0))|0;}
-else if(op===22){if(b===0)return d(4);r=((a>>>0)%(b>>>0))|0;}
+else if(op===20){if(b===0)return d(4);r=b===-1?0:a%b;}
+else if(op===21){if(b===0)return d(4);r=Math.floor((a>>>0)/(b>>>0));}
+else if(op===22){if(b===0)return d(4);r=(a>>>0)%(b>>>0);}
 else if(op===24)r=a&b;
 else if(op===25)r=a|b;
 else if(op===26)r=a^b;
 else if(op===28)r=a<<(b&31);
 else if(op===29)r=a>>(b&31);
-else if(op===30)r=(a>>>(b&31))|0;
+else if(op===30)r=a>>>(b&31);
 else if(op===32)r=a===b?1:0;
 else if(op===33)r=a<b?1:0;
 else r=(a>>>0)<(b>>>0)?1:0;
@@ -88,5 +88,5 @@ for(const id of readdirSync(I).sort()){
 const dir=join(I,id),p=new Uint8Array(readFileSync(join(dir,'program.bin'))),ip=join(dir,'input.bin'),g=new Uint8Array(existsSync(ip)?readFileSync(ip):[]),r=run(p,g);
 mkdirSync(join(O,id),{recursive:true});
 writeFileSync(join(O,id,'stdout.bin'),r.out);
-writeFileSync(join(O,id,'exit.txt'),`${r.code}\n`);
+writeFileSync(join(O,id,'exit.txt'),r.code+'\n');
 }
